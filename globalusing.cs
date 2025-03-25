@@ -1,0 +1,13 @@
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Identity;
+global using HeQuanTriDB.Models;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
+global using HeQuanTriDB.repositories;
+global using HeQuanTriDB.Models.dto;
+global using HeQuanTriDB.services;
+global using Microsoft.Data.SqlClient;
