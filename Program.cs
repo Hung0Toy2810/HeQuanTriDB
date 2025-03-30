@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using HeQuanTriDB;
 using Microsoft.EntityFrameworkCore;
 using System;
+//HeQuanTriDB.Respositoies.OrderRepository
+using HeQuanTriDB.Respositoies.OrderRepository;
 
 namespace HeQuanTriDB
 {
@@ -56,6 +58,7 @@ namespace HeQuanTriDB
                         new OrderRepository("Server=localhost,1433;Database=RestaurantManagement;User Id=sa;Password=YourPassword123;TrustServerCertificate=true;"));
 
                     services.AddScoped<IOrderService, OrderService>();
+                    
                 });
 
 

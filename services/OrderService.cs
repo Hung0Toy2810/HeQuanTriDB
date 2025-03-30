@@ -33,7 +33,8 @@ namespace HeQuanTriDB.services
 
             try
             {
-                int maHoaDon = await _orderRepository.AddOrder(hoaDon, connection, transaction);
+                // Truyền chỉ SqlTransaction vào AddOrder
+                int maHoaDon = await _orderRepository.AddOrder(hoaDon, transaction);
 
                 foreach (var item in orderItems)
                 {
@@ -47,7 +48,8 @@ namespace HeQuanTriDB.services
                         SoLuong = item.SoLuong,
                         ThanhTien = item.Gia * item.SoLuong
                     };
-                    await _orderRepository.AddOrderDetail(chiTietHoaDon, connection, transaction);
+                    // Truyền chỉ SqlTransaction vào AddOrderDetail
+                    await _orderRepository.AddOrderDetail(chiTietHoaDon, transaction);
                 }
 
                 await transaction.CommitAsync();

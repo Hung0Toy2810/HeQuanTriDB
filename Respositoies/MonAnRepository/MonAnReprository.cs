@@ -1,3 +1,16 @@
+using System.Data;
+namespace HeQuanTriDB.repositories
+{
+    public interface IMonAnRespository
+    {
+        string ConnectionString { get; }
+        Task<List<MonAn>> GetAllMonAns();
+        Task<MonAn> GetMonAnByID(int maMonAn);
+        Task<int> AddMonAn(MonAn monAn, SqlTransaction transaction);
+        Task<int> UpdateMonAn(MonAn monAn, SqlTransaction transaction);
+        Task<int> DeleteMonAn(int maMonAn, SqlTransaction transaction);
+    }
+}
 namespace HeQuanTriDB.repositories
 {
     public class MonAnRespository : IMonAnRespository
@@ -33,6 +46,7 @@ namespace HeQuanTriDB.repositories
             }
             return monAns;
         }
+
         public async Task<MonAn> GetMonAnByID(int maMonAn)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -55,12 +69,17 @@ namespace HeQuanTriDB.repositories
             }
             throw new KeyNotFoundException($"MonAn with ID {maMonAn} was not found.");
         }
-        public async Task<int> AddMonAn(MonAn monAn)
+
+        public async Task<int> AddMonAn(MonAn monAn, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            using var connection = transaction.Connection;
+            if (connection.State != ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
 
             using var command = connection.CreateCommand();
+            command.Transaction = transaction;
             command.CommandText = @"
                 INSERT INTO MonAns (TenMonAn, Gia, SoLuongHienCo)
                 OUTPUT INSERTED.MaMonAn
@@ -72,12 +91,17 @@ namespace HeQuanTriDB.repositories
             var result = await command.ExecuteScalarAsync();
             return Convert.ToInt32(result);
         }
-        public async Task<int> UpdateMonAn(MonAn monAn)
+
+        public async Task<int> UpdateMonAn(MonAn monAn, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            using var connection = transaction.Connection;
+            if (connection.State != ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
 
             using var command = connection.CreateCommand();
+            command.Transaction = transaction;
             command.CommandText = @"
                 UPDATE MonAns
                 SET TenMonAn = @TenMonAn, Gia = @Gia, SoLuongHienCo = @SoLuongHienCo
@@ -89,12 +113,17 @@ namespace HeQuanTriDB.repositories
 
             return await command.ExecuteNonQueryAsync();
         }
-        public async Task<int> DeleteMonAn(int maMonAn)
+
+        public async Task<int> DeleteMonAn(int maMonAn, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            using var connection = transaction.Connection;
+            if (connection.State != ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
 
             using var command = connection.CreateCommand();
+            command.Transaction = transaction;
             command.CommandText = "DELETE FROM MonAns WHERE MaMonAn = @MaMonAn";
             command.Parameters.AddWithValue("@MaMonAn", maMonAn);
 
