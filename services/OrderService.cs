@@ -33,7 +33,6 @@ namespace HeQuanTriDB.services
 
             try
             {
-                // Truyền chỉ SqlTransaction vào AddOrder
                 int maHoaDon = await _orderRepository.AddOrder(hoaDon, transaction);
 
                 foreach (var item in orderItems)
@@ -48,7 +47,6 @@ namespace HeQuanTriDB.services
                         SoLuong = item.SoLuong,
                         ThanhTien = item.Gia * item.SoLuong
                     };
-                    // Truyền chỉ SqlTransaction vào AddOrderDetail
                     await _orderRepository.AddOrderDetail(chiTietHoaDon, transaction);
                 }
 
@@ -57,7 +55,14 @@ namespace HeQuanTriDB.services
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                try
+                {
+                    await transaction.RollbackAsync();
+                }
+                catch (Exception rollbackEx)
+                {
+                    throw new Exception($"Lỗi khi tạo đơn hàng: {ex.Message}. Rollback thất bại: {rollbackEx.Message}", ex);
+                }
                 throw new Exception($"Lỗi khi tạo đơn hàng: {ex.Message}", ex);
             }
         }

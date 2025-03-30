@@ -55,6 +55,7 @@ namespace HeQuanTriDB
 
                     services.AddScoped<IOrderRepository, OrderRepository>(sp =>
                         new OrderRepository("Server=localhost,1433;Database=RestaurantManagement;User Id=sa;Password=YourPassword123;TrustServerCertificate=true;"));
+                    
 
                     services.AddScoped<IOrderService, OrderService>();
                     

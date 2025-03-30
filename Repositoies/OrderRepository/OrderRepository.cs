@@ -29,13 +29,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> AddOrder(HoaDon hoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = @"
                 INSERT INTO HoaDons (MaNhanVien, MaKhachHang, NgayLap, TongTien)
@@ -53,13 +47,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> AddOrderDetail(ChiTietHoaDon chiTietHoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = @"
                 INSERT INTO ChiTietHoaDons (MaHoaDon, MaMonAn, SoLuong, ThanhTien)
@@ -128,13 +116,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> UpdateOrder(HoaDon hoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = @"
                 UPDATE HoaDons
@@ -152,13 +134,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> DeleteOrder(int maHoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = "DELETE FROM HoaDons WHERE MaHoaDon = @MaHoaDon";
             command.Parameters.AddWithValue("@MaHoaDon", maHoaDon);
@@ -194,13 +170,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> UpdateOrderDetail(ChiTietHoaDon chiTietHoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = @"
                 UPDATE ChiTietHoaDons
@@ -218,13 +188,7 @@ namespace HeQuanTriDB.Repositoies.OrderRepository
 
         public async Task<int> DeleteOrderDetail(int maChiTietHoaDon, SqlTransaction transaction)
         {
-            using var connection = transaction.Connection;
-            if (connection.State != ConnectionState.Open)
-            {
-                await connection.OpenAsync();
-            }
-
-            using var command = connection.CreateCommand();
+            using var command = transaction.Connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = "DELETE FROM ChiTietHoaDons WHERE MaChiTietHoaDon = @MaChiTietHoaDon";
             command.Parameters.AddWithValue("@MaChiTietHoaDon", maChiTietHoaDon);
