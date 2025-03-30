@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.OrderRepository
+namespace HeQuanTriDB.Repositoies.OrderRepository
 {
     public interface IOrderRepository
     {
@@ -14,7 +14,7 @@ namespace HeQuanTriDB.Respositoies.OrderRepository
         Task<int> DeleteOrderDetail(int maChiTietHoaDon, SqlTransaction transaction);
     }
 }
-namespace HeQuanTriDB.Respositoies.OrderRepository
+namespace HeQuanTriDB.Repositoies.OrderRepository
 {
     public class OrderRepository : IOrderRepository
     {

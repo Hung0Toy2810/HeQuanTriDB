@@ -1,7 +1,7 @@
 using System.Data;
-namespace HeQuanTriDB.repositories
+namespace HeQuanTriDB.Repositories.MonAnRespository
 {
-    public interface IMonAnRespository
+    public interface IMonAnRepository
     {
         string ConnectionString { get; }
         Task<List<MonAn>> GetAllMonAns();
@@ -11,9 +11,9 @@ namespace HeQuanTriDB.repositories
         Task<int> DeleteMonAn(int maMonAn, SqlTransaction transaction);
     }
 }
-namespace HeQuanTriDB.repositories
+namespace HeQuanTriDB.Repositories.MonAnRespository
 {
-    public class MonAnRespository : IMonAnRespository
+    public class MonAnRespository : IMonAnRepository
     {
         private readonly string _connectionString;
         public string ConnectionString => _connectionString;

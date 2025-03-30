@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.LuuTruRepository
+namespace HeQuanTriDB.Repositoies.LuuTruRepository
 {
     public interface ILuuTruRepository
     {
@@ -12,7 +12,7 @@ namespace HeQuanTriDB.Respositoies.LuuTruRepository
 }
 
 
-namespace HeQuanTriDB.Respositoies.LuuTruRepository
+namespace HeQuanTriDB.Repositoies.LuuTruRepository
 {
     public class LuuTruRepository : ILuuTruRepository
     {

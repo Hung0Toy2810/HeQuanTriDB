@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.ChucVuRepository
+namespace HeQuanTriDB.Repositoies.ChucVuRepository
 {
     public interface IChucVuRepository
     {
@@ -14,7 +14,7 @@ namespace HeQuanTriDB.Respositoies.ChucVuRepository
 
 
 
-namespace HeQuanTriDB.Respositoies.ChucVuRepository
+namespace HeQuanTriDB.Repositoies.ChucVuRepository
 {
     public class ChucVuRepository : IChucVuRepository
     {

@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.XuatKhoRepository
+namespace HeQuanTriDB.Repositoies.XuatKhoRepository
 {
     //interface
     public interface IXuatKhoRepository
@@ -14,7 +14,7 @@ namespace HeQuanTriDB.Respositoies.XuatKhoRepository
 }
 
 
-namespace HeQuanTriDB.Respositoies.XuatKhoRepository
+namespace HeQuanTriDB.Repositoies.XuatKhoRepository
 {
     public class XuatKhoRepository : IXuatKhoRepository
     {

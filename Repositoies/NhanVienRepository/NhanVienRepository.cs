@@ -1,5 +1,5 @@
 using System.Data;
-namespace HeQuanTriDB.Respositoies.NhanVienRepository
+namespace HeQuanTriDB.Repositoies.NhanVienRepository
 {
     public interface INhanVienRepository
     {
@@ -13,7 +13,7 @@ namespace HeQuanTriDB.Respositoies.NhanVienRepository
 }
 
 
-namespace HeQuanTriDB.Respositoies.NhanVienRepository
+namespace HeQuanTriDB.Repositoies.NhanVienRepository
 {
     public class NhanVienRepository : INhanVienRepository
     {

@@ -7,11 +7,9 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Identity;
 global using HeQuanTriDB.Models;
 global using Microsoft.EntityFrameworkCore.Diagnostics;
-global using HeQuanTriDB.repositories;
+global using HeQuanTriDB.Repositoies.OrderRepository;
 global using HeQuanTriDB.Models.dto;
 global using HeQuanTriDB.services;
 global using Microsoft.Data.SqlClient;
-//HeQuanTriDB.Respositoies.OrderRepository
-global using HeQuanTriDB.Respositoies.OrderRepository;
 // system.data
 global using System.Data;

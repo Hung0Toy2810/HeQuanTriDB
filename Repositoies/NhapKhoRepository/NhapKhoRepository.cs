@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace HeQuanTriDB.Respositoies.NhapKhoRepository
+namespace HeQuanTriDB.Repositoies.NhapKhoRepository
 {
     public interface INhapKhoRepository
     {
@@ -14,7 +14,7 @@ namespace HeQuanTriDB.Respositoies.NhapKhoRepository
 }
 
 
-namespace HeQuanTriDB.Respositoies.NhapKhoRepository
+namespace HeQuanTriDB.Repositoies.NhapKhoRepository
 {
     public class NhapKhoRepository : INhapKhoRepository
     {

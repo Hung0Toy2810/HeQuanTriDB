@@ -1,5 +1,5 @@
 using System.Data;
-namespace HeQuanTriDB.Respositoies.NhaCungCapRepository
+namespace HeQuanTriDB.Repositoies.NhaCungCapRepository
 {
     public interface INhaCungCapRepository
     {
@@ -13,7 +13,7 @@ namespace HeQuanTriDB.Respositoies.NhaCungCapRepository
 }
 
 
-namespace HeQuanTriDB.Respositoies.NhaCungCapRepository
+namespace HeQuanTriDB.Repositoies.NhaCungCapRepository
 {
     public class NhaCungCapRepository : INhaCungCapRepository
     {

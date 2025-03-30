@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.KhachHangRepository
+namespace HeQuanTriDB.Repositoies.KhachHangRepository
 {
     public interface IKhachHangRepository
     {
@@ -10,7 +10,7 @@ namespace HeQuanTriDB.Respositoies.KhachHangRepository
         Task<int> DeleteKhachHang(int maKhachHang, SqlTransaction transaction);
     }
 }
-namespace HeQuanTriDB.Respositoies.KhachHangRepository
+namespace HeQuanTriDB.Repositoies.KhachHangRepository
 {
     public class KhachHangRepository : IKhachHangRepository
     {

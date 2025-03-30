@@ -1,4 +1,4 @@
-namespace HeQuanTriDB.Respositoies.KhuyenMaiRepository
+namespace HeQuanTriDB.Repositoies.KhuyenMaiRepository
 {
     public interface IKhuyenMaiRepository
     {
@@ -11,7 +11,7 @@ namespace HeQuanTriDB.Respositoies.KhuyenMaiRepository
     }
 }
 
-namespace HeQuanTriDB.Respositoies.KhuyenMaiRepository
+namespace HeQuanTriDB.Repositoies.KhuyenMaiRepository
 {
     public class KhuyenMaiRepository : IKhuyenMaiRepository
     {

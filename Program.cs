@@ -5,7 +5,6 @@ using HeQuanTriDB;
 using Microsoft.EntityFrameworkCore;
 using System;
 //HeQuanTriDB.Respositoies.OrderRepository
-using HeQuanTriDB.Respositoies.OrderRepository;
 
 namespace HeQuanTriDB
 {
