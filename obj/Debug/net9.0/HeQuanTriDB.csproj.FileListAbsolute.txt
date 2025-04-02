@@ -201,3 +201,4 @@
 /Users/luongnguyenthanhhung/Documents/my-app/HeQuanTriDB/bin/Debug/net9.0/runtimes/win/lib/net9.0/Microsoft.Data.SqlClient.dll
 /Users/luongnguyenthanhhung/Documents/my-app/HeQuanTriDB/bin/Debug/net9.0/runtimes/win/lib/net9.0/System.Security.Cryptography.Pkcs.dll
 /Users/luongnguyenthanhhung/Documents/my-app/HeQuanTriDB/obj/Debug/net9.0/HeQuanTriDB.sourcelink.json
+/Users/luongnguyenthanhhung/Documents/my-app/HeQuanTriDB/bin/Debug/net9.0/appsettings.json

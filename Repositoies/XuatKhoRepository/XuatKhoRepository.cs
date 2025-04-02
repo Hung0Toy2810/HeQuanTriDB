@@ -1,142 +1,92 @@
-namespace HeQuanTriDB.Repositoies.XuatKhoRepository
+using HeQuanTriDB.Models;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Threading.Tasks;
+// IConfiguration
+using Microsoft.Extensions.Configuration;
+
+namespace HeQuanTriDB.Repositories.XuatKhoRepository
 {
-    //interface
     public interface IXuatKhoRepository
     {
         string ConnectionString { get; }
-        Task<List<XuatKho>> GetAllXuatKhos();
-        Task<XuatKho> GetXuatKhoByID(int maXuatKho);
-        // with transaction
-        Task<int> AddXuatKho(XuatKho xuatKho, SqlTransaction transaction);
-        Task<int> UpdateXuatKho(XuatKho xuatKho, SqlTransaction transaction);
-        Task<int> DeleteXuatKho(int maXuatKho, SqlTransaction transaction);
+        Task<LuuTru?> GetLuuTruGanHetHanAsync(int maNguyenLieu, SqlConnection connection, SqlTransaction transaction);
+        Task<int> CreateXuatKhoAsync(XuatKho xuatKho, SqlConnection connection, SqlTransaction transaction);
+        Task UpdateLuuTruAsync(LuuTru luuTru, SqlConnection connection, SqlTransaction transaction);
+        Task DeleteLuuTruAsync(int maLuuTru, SqlConnection connection, SqlTransaction transaction);
     }
-}
 
-
-namespace HeQuanTriDB.Repositoies.XuatKhoRepository
-{
     public class XuatKhoRepository : IXuatKhoRepository
     {
         private readonly string _connectionString;
 
         public string ConnectionString => _connectionString;
 
-        public XuatKhoRepository(string connectionString)
+        public XuatKhoRepository(IConfiguration configuration)
         {
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<List<XuatKho>> GetAllXuatKhos()
+        public async Task<LuuTru?> GetLuuTruGanHetHanAsync(int maNguyenLieu, SqlConnection connection, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM XuatKhos";
-
-            using var reader = await command.ExecuteReaderAsync();
-            var xuatKhos = new List<XuatKho>();
-            while (await reader.ReadAsync())
+            string sql = "SELECT TOP 1 * FROM LuuTrus WHERE MaNguyenLieu = @MaNguyenLieu AND SoLuong > 0 ORDER BY NgayHetHan ASC";
+            using (var command = new SqlCommand(sql, connection, transaction))
             {
-                var xuatKho = new XuatKho
+                command.Parameters.AddWithValue("@MaNguyenLieu", maNguyenLieu);
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    MaXuatKho = reader.GetInt32(reader.GetOrdinal("MaXuatKho")),
-                    MaNhanVien = reader.GetInt32(reader.GetOrdinal("MaNhanVien")),
-                    MaNguyenLieu = reader.GetInt32(reader.GetOrdinal("MaNguyenLieu")),
-                    SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
-                    NgayXuat = reader.GetDateTime(reader.GetOrdinal("NgayXuat")),
-                    NguyenNhanXuatKho = reader.GetString(reader.GetOrdinal("NguyenNhanXuatKho")),
-                    MaLuuTru = reader.GetInt32(reader.GetOrdinal("MaLuuTru"))
-                };
-                xuatKhos.Add(xuatKho);
+                    if (await reader.ReadAsync())
+                    {
+                        return new LuuTru
+                        {
+                            MaLuuTru = reader.GetInt32("MaLuuTru"),
+                            MaNhanVien = reader.GetInt32("MaNhanVien"),
+                            MaNguyenLieu = reader.GetInt32("MaNguyenLieu"),
+                            SoLuong = reader.GetInt32("SoLuong"),
+                            NgayHetHan = reader.GetDateTime("NgayHetHan")
+                        };
+                    }
+                    return null; // Explicitly returning null for nullable type
+                }
             }
-            return xuatKhos;
         }
 
-        public async Task<XuatKho> GetXuatKhoByID(int maXuatKho)
+        public async Task<int> CreateXuatKhoAsync(XuatKho xuatKho, SqlConnection connection, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM XuatKhos WHERE MaXuatKho = @MaXuatKho";
-            command.Parameters.AddWithValue("@MaXuatKho", maXuatKho);
-
-            using var reader = await command.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
+            string sql = @"INSERT INTO XuatKhos (MaNhanVien, MaNguyenLieu, SoLuong, NgayXuat, NguyenNhanXuatKho, MaLuuTru)
+                           VALUES (@MaNhanVien, @MaNguyenLieu, @SoLuong, @NgayXuat, @NguyenNhanXuatKho, @MaLuuTru);
+                           SELECT SCOPE_IDENTITY();";
+            using (var command = new SqlCommand(sql, connection, transaction))
             {
-                return new XuatKho
-                {
-                    MaXuatKho = reader.GetInt32(reader.GetOrdinal("MaXuatKho")),
-                    MaNhanVien = reader.GetInt32(reader.GetOrdinal("MaNhanVien")),
-                    MaNguyenLieu = reader.GetInt32(reader.GetOrdinal("MaNguyenLieu")),
-                    SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
-                    NgayXuat = reader.GetDateTime(reader.GetOrdinal("NgayXuat")),
-                    NguyenNhanXuatKho = reader.GetString(reader.GetOrdinal("NguyenNhanXuatKho")),
-                    MaLuuTru = reader.GetInt32(reader.GetOrdinal("MaLuuTru"))
-                };
+                command.Parameters.AddWithValue("@MaNhanVien", xuatKho.MaNhanVien);
+                command.Parameters.AddWithValue("@MaNguyenLieu", xuatKho.MaNguyenLieu);
+                command.Parameters.AddWithValue("@SoLuong", xuatKho.SoLuong);
+                command.Parameters.AddWithValue("@NgayXuat", xuatKho.NgayXuat);
+                command.Parameters.AddWithValue("@NguyenNhanXuatKho", xuatKho.NguyenNhanXuatKho);
+                command.Parameters.AddWithValue("@MaLuuTru", xuatKho.MaLuuTru);
+                return Convert.ToInt32(await command.ExecuteScalarAsync());
             }
-            throw new KeyNotFoundException($"XuatKho with ID {maXuatKho} was not found.");
         }
 
-        public async Task<int> AddXuatKho(XuatKho xuatKho, SqlTransaction transaction)
+        public async Task UpdateLuuTruAsync(LuuTru luuTru, SqlConnection connection, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            using var command = connection.CreateCommand();
-            command.Transaction = transaction;
-            command.CommandText = @"
-                INSERT INTO XuatKhos (MaNhanVien, MaNguyenLieu, SoLuong, NgayXuat, NguyenNhanXuatKho, MaLuuTru)
-                VALUES (@MaNhanVien, @MaNguyenLieu, @SoLuong, @NgayXuat, @NguyenNhanXuatKho, @MaLuuTru);
-                SELECT SCOPE_IDENTITY();";
-            command.Parameters.AddWithValue("@MaNhanVien", xuatKho.MaNhanVien);
-            command.Parameters.AddWithValue("@MaNguyenLieu", xuatKho.MaNguyenLieu);
-            command.Parameters.AddWithValue("@SoLuong", xuatKho.SoLuong);
-            command.Parameters.AddWithValue("@NgayXuat", xuatKho.NgayXuat);
-            command.Parameters.AddWithValue("@NguyenNhanXuatKho", xuatKho.NguyenNhanXuatKho);
-            command.Parameters.AddWithValue("@MaLuuTru", xuatKho.MaLuuTru);
-
-            return Convert.ToInt32(await command.ExecuteScalarAsync());
+            string sql = "UPDATE LuuTrus SET SoLuong = @SoLuong WHERE MaLuuTru = @MaLuuTru";
+            using (var command = new SqlCommand(sql, connection, transaction))
+            {
+                command.Parameters.AddWithValue("@SoLuong", luuTru.SoLuong);
+                command.Parameters.AddWithValue("@MaLuuTru", luuTru.MaLuuTru);
+                await command.ExecuteNonQueryAsync();
+            }
         }
-        
 
-        public async Task<int> UpdateXuatKho(XuatKho xuatKho, SqlTransaction transaction)
+        public async Task DeleteLuuTruAsync(int maLuuTru, SqlConnection connection, SqlTransaction transaction)
         {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            using var command = connection.CreateCommand();
-            command.Transaction = transaction;
-            command.CommandText = @"
-                UPDATE XuatKhos
-                SET MaNhanVien = @MaNhanVien, MaNguyenLieu = @MaNguyenLieu, SoLuong = @SoLuong, 
-                    NgayXuat = @NgayXuat, NguyenNhanXuatKho = @NguyenNhanXuatKho, MaLuuTru = @MaLuuTru
-                WHERE MaXuatKho = @MaXuatKho";
-            command.Parameters.AddWithValue("@MaXuatKho", xuatKho.MaXuatKho);
-            command.Parameters.AddWithValue("@MaNhanVien", xuatKho.MaNhanVien);
-            command.Parameters.AddWithValue("@MaNguyenLieu", xuatKho.MaNguyenLieu);
-            command.Parameters.AddWithValue("@SoLuong", xuatKho.SoLuong);
-            command.Parameters.AddWithValue("@NgayXuat", xuatKho.NgayXuat);
-            command.Parameters.AddWithValue("@NguyenNhanXuatKho", xuatKho.NguyenNhanXuatKho);
-            command.Parameters.AddWithValue("@MaLuuTru", xuatKho.MaLuuTru);
-
-            return await command.ExecuteNonQueryAsync();
-        }
-        
-
-        public async Task<int> DeleteXuatKho(int maXuatKho, SqlTransaction transaction)
-        {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            using var command = connection.CreateCommand();
-            command.Transaction = transaction;
-            command.CommandText = "DELETE FROM XuatKhos WHERE MaXuatKho = @MaXuatKho";
-            command.Parameters.AddWithValue("@MaXuatKho", maXuatKho);
-
-            return await command.ExecuteNonQueryAsync();
+            string sql = "DELETE FROM LuuTrus WHERE MaLuuTru = @MaLuuTru";
+            using (var command = new SqlCommand(sql, connection, transaction))
+            {
+                command.Parameters.AddWithValue("@MaLuuTru", maLuuTru);
+                await command.ExecuteNonQueryAsync();
+            }
         }
     }
 }

@@ -1,5 +1,17 @@
-namespace HeQuanTriDB.services
+using HeQuanTriDB.Models; // Giả định namespace cho HoaDon, ChiTietHoaDon, OrderDTO
+using HeQuanTriDB.Repositories.OrderRepository;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace HeQuanTriDB.Services // Sửa "services" thành "Services" cho đúng chuẩn PascalCase
 {
+    public interface IOrderService
+    {
+        Task<int> Order(int maNhanVien, int maKhachHang, List<OrderDTO> orderItems);
+    }
+
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
