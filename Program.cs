@@ -2,10 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using HeQuanTriDB;
-using System;
 using HeQuanTriDB.Repositories.XuatKhoRepository;
 using HeQuanTriDB.Services;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HeQuanTriDB
 {
@@ -13,7 +15,6 @@ namespace HeQuanTriDB
     {
         static async Task Main(string[] args)
         {
-            
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 if (args.ExceptionObject is Exception ex)
@@ -22,11 +23,10 @@ namespace HeQuanTriDB
                 }
             };
 
-            
             TaskScheduler.UnobservedTaskException += (sender, args) =>
             {
                 LogException(args.Exception);
-                args.SetObserved(); 
+                args.SetObserved();
             };
 
             var host = CreateHostBuilder(args).Build();
@@ -34,19 +34,30 @@ namespace HeQuanTriDB
             {
                 var services = scope.ServiceProvider;
 
-                var orderService = services.GetRequiredService<IOrderService>();
-
-                int maNhanVien = 1;
-                int maKhachHang = 2;
-                var orderItems = new List<OrderDTO>
+                try
                 {
-                    new OrderDTO { MaMonAn = 1, TenMonAn = "Pho Bo", Gia = 50000, SoLuongHienCo = 100, SoLuong = 2 },
-                    new OrderDTO { MaMonAn = 2, TenMonAn = "Bun Cha", Gia = 45000, SoLuongHienCo = 100, SoLuong = 1 }
-                };
+                    // Lấy service XuatKhoService
+                    var xuatKhoService = services.GetRequiredService<IXuatKhoService>();
 
-                int maHoaDon = await orderService.Order(maNhanVien, maKhachHang, orderItems);
-                Console.WriteLine($"Đơn hàng đã được tạo thành công với MaHoaDon: {maHoaDon}");
-                Console.WriteLine("Kiểm tra bảng HoaDons và ChiTietHoaDons trong DB để xác nhận.");
+                    // Thông tin kiểm tra
+                    int maNguyenLieu = 10; // ID nguyên liệu cần xuất
+                    int soLuongCanXuat = 9; // Số lượng cần xuất
+                    int maNhanVien = 1; // ID nhân viên thực hiện
+                    string nguyenNhanXuatKho = "Xuất nguyên liệu cho sản xuất";
+
+                    // Gọi service XuatKhoNguyenLieuAsync
+                    var danhSachXuatKho = await xuatKhoService.XuatKhoNguyenLieuAsync(maNguyenLieu, soLuongCanXuat, maNhanVien, nguyenNhanXuatKho);
+
+                    Console.WriteLine("Xuất kho thành công. Danh sách xuất kho:");
+                    foreach (var xuatKho in danhSachXuatKho)
+                    {
+                        Console.WriteLine($"- MaXuatKho: {xuatKho.MaXuatKho}, MaNguyenLieu: {xuatKho.MaNguyenLieu}, SoLuong: {xuatKho.SoLuong}, NgayXuat: {xuatKho.NgayXuat}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Lỗi khi xuất kho: {ex.Message}");
+                }
             }
 
             Console.WriteLine("Nhấn phím bất kỳ để thoát...");
@@ -57,17 +68,17 @@ namespace HeQuanTriDB
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    // Cấu hình DbContext
                     services.AddDbContext<DBContext>(options =>
                         options.UseSqlServer("Server=localhost,1433;Database=RestaurantManagement;User Id=sa;Password=YourPassword123;TrustServerCertificate=true;"));
 
+                    // Đăng ký repository và service
                     services.AddScoped<IOrderRepository, OrderRepository>(sp =>
                         new OrderRepository(sp.GetRequiredService<IConfiguration>()));
-
                     services.AddScoped<IOrderService, OrderService>();
 
                     services.AddScoped<IXuatKhoRepository, XuatKhoRepository>(sp =>
                         new XuatKhoRepository(sp.GetRequiredService<IConfiguration>()));
-
                     services.AddScoped<IXuatKhoService, XuatKhoService>();
                 });
 
@@ -82,6 +93,8 @@ namespace HeQuanTriDB
                 Console.WriteLine($"Inner Stack Trace: {ex.InnerException.StackTrace}");
             }
         }
+    
+
         static async Task SeedData(DBContext context)
         {
             if (!context.ChucVus.Any())

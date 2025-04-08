@@ -75,15 +75,8 @@ namespace HeQuanTriDB.Services
                     xuatKho.MaXuatKho = await _xuatKhoRepository.CreateXuatKhoAsync(xuatKho, connection, transaction);
                     danhSachXuatKho.Add(xuatKho);
 
-                    // Cập nhật hoặc xóa lô trữ
-                    if (luuTru.SoLuong == 0)
-                    {
-                        await _xuatKhoRepository.DeleteLuuTruAsync(luuTru.MaLuuTru, connection, transaction);
-                    }
-                    else
-                    {
-                        await _xuatKhoRepository.UpdateLuuTruAsync(luuTru, connection, transaction);
-                    }
+                    // Cập nhật lô trữ (không xóa, chỉ cập nhật số lượng)
+                    await _xuatKhoRepository.UpdateLuuTruAsync(luuTru, connection, transaction);
                 }
 
                 await transaction.CommitAsync();

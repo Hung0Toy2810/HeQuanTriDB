@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HeQuanTriDB")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dcfb61510ed158cc86a54c86671dcb60c0040a5a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+826541b7eab642ecf7f29f82b8fad860fe3cd8ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("HeQuanTriDB")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HeQuanTriDB")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
