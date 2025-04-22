@@ -36,16 +36,14 @@ namespace HeQuanTriDB
 
                 try
                 {
-                    // Lấy service XuatKhoService
                     var xuatKhoService = services.GetRequiredService<IXuatKhoService>();
 
-                    // Thông tin kiểm tra
-                    int maNguyenLieu = 10; // ID nguyên liệu cần xuất
-                    int soLuongCanXuat = 9; // Số lượng cần xuất
-                    int maNhanVien = 1; // ID nhân viên thực hiện
+                    int maNguyenLieu = 5; 
+                    int soLuongCanXuat = 9; 
+                    int maNhanVien = 1; 
                     string nguyenNhanXuatKho = "Xuất nguyên liệu cho sản xuất";
 
-                    // Gọi service XuatKhoNguyenLieuAsync
+                    
                     var danhSachXuatKho = await xuatKhoService.XuatKhoNguyenLieuAsync(maNguyenLieu, soLuongCanXuat, maNhanVien, nguyenNhanXuatKho);
 
                     Console.WriteLine("Xuất kho thành công. Danh sách xuất kho:");
